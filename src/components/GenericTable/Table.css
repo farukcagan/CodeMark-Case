@@ -1,0 +1,19 @@
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+  
+  .user-table-div{
+    overflow-y: scroll;
+    height: 500px;
+  }
+  
+  .user-profile{
+  width: 30px;
+  height: 30px;
+  }
+  
+  .user-page{
+    margin-top: 50px;
+  }
