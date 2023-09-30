@@ -7,13 +7,9 @@ import "./Todo.css";
 import ButtonGroup from "../../components/Button/Buttons";
 import { ScrollContainer } from "react-nice-scroll";
 import "react-nice-scroll/dist/styles.css";
+import { TodoModel } from "../../models";
 
-type TodoModel = {
-  id: number;
-  todo: string;
-  userId: number;
-  completed: boolean;
-};
+
 
 function TodoApp() {
   const [todos, setTodos] = useState<TodoModel[]>([]);

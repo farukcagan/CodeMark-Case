@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import LoginPage from './pages/login-page/LoginPage';
 import UsersPage from './pages/users-page/UsersPage';
 import TodoPage from './pages/todo-page/Todo';
-import { store } from './store/store';
+import { store } from './pages/store/store';
 
 function App() {
 

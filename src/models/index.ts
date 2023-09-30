@@ -16,3 +16,10 @@ export interface Todo {
   completed: boolean;
   userId: number;
 }
+
+export interface TodoModel {
+  id: number;
+  todo: string;
+  userId: number;
+  completed: boolean;
+};

@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import authReducer from './AuthSlice';
-import { store } from '../../store/store';
+import { store } from '../../pages/store/store';
 
 const rootReducer = combineReducers({
   auth: authReducer,
