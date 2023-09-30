@@ -24,6 +24,7 @@ function TodoApp() {
 
   const API_URL = "https://dummyjson.com/todos";
   const ADD_TODO_URL = "https://dummyjson.com/todos/add";
+
   console.log(todos)
 
   async function fetchTodos() {
@@ -92,7 +93,7 @@ function TodoApp() {
         console.log('DATDATDAT RES: ', response)
         const data = await response.json();
         console.log('DATDATDAT DATA: ', data)
-        setTodos([...todos, data]);
+        setTodos([data, ...todos]);
         setNewTodo("");
       } catch (error) {
         console.error("Todo eklenirken bir hata oluştu:", error);
@@ -187,7 +188,7 @@ function TodoApp() {
             toast: true,
             icon: "error",
             title: "İşlem Başarısız",
-            text: "Bu id'e ait görevler üzerinde değişiklik yapılamaz.",
+            text: "Sonradan eklenen görevler üzerinde değişiklik yapılamaz.",
             timerProgressBar: true,
             timer: 3000,
             showConfirmButton: false,
@@ -268,7 +269,7 @@ function TodoApp() {
     return filteredTodos;
   }
 
-  const handleFilteredUserIdChange = (e:any) => {
+  const handleFilteredUserIdChange = (e: any) => {
     const value = e.target.value;
     if (/^\d*$/.test(value)) {
       setFilteredUserId(value === '' ? null : parseInt(value, 10));
