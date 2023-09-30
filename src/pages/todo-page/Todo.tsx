@@ -15,6 +15,7 @@ function TodoApp() {
   const [filteredUserId, setFilteredUserId] = useState<number | null>(null);
   const [filteredTodo, setFilteredTodo] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [allTodosSelected, setAllTodosSelected] = useState<boolean>(false);
 
   const [animationParent] = useAutoAnimate();
 
@@ -49,6 +50,28 @@ function TodoApp() {
     fetchTodos();
   }, []);
 
+  function todosWithReults(type: string, todos: [], results: any) {
+    switch (type) {
+      case 'update':
+        return todos.map((todo: any) => {
+          const updatedItem = results?.find((res: any) => res.id === todo.id);
+          return updatedItem ? updatedItem : todo;
+        });
+      case 'delete':
+        const deletedIds = results
+          .filter((result: any) => result.isDeleted)
+          .map((result: any) => result.id);
+
+        return todos.filter(
+          (todo: any) => !deletedIds.includes(todo.id)
+        );
+      default:
+        console.log('error!');
+    }
+
+
+  }
+
   const addTodo = async () => {
     setShowModal(true);
     if (newTodo.trim() !== "") {
@@ -59,10 +82,12 @@ function TodoApp() {
           body: JSON.stringify({
             todo: newTodo,
             completed: false,
-            userId: 30,
+            userId: 5,
           }),
         });
+        console.log('DATDATDAT RES: ', response)
         const data = await response.json();
+        console.log('DATDATDAT DATA: ', data)
         setTodos([...todos, data]);
         setNewTodo("");
       } catch (error) {
@@ -71,14 +96,14 @@ function TodoApp() {
     }
   };
 
-  const deleteTodo = async (id: any) => {
+  const deleteTodo = async (todo: any) => {
     try {
-      const response = await fetch(`${API_URL}/${id}`, {
+      const response = await fetch(`${API_URL}/${todo?.id}`, {
         method: "DELETE",
       });
       const data = await response.json();
-
-      return data.isDeleted;
+      console.log('DATDATDAT DELETE: ', data)
+      return data;
     } catch (error) {
       console.error("Todo silinirken bir hata oluştu:", error);
       throw error;
@@ -88,22 +113,34 @@ function TodoApp() {
   const handleDelete = async () => {
     try {
       const deletePromises = selectedTodo.map(async (todo: any) => {
-        const isDeleted = await deleteTodo(todo.id);
-        return { id: todo.id, isDeleted };
+        if (todo?.id === 151) {
+          Swal.fire({
+            toast: true,
+            icon: "error",
+            title: "İşlem Başarısız",
+            text: "Bu id'e ait görevleri silemezsiniz.",
+            timerProgressBar: true,
+            timer: 3000,
+            showConfirmButton: false,
+            position: "top-end",
+          })
+          setSelectedTodo([])
+        } else {
+          const deleted = await deleteTodo(todo);
+          return { ...deleted };
+        }
       });
 
+
+      // const results = await Promise.all(deletePromises);
+
       const results = await Promise.all(deletePromises);
+      const deletedArray = todosWithReults('delete', todos, results);
 
-      const deletedIds = results
-        .filter((result) => result.isDeleted)
-        .map((result) => result.id);
-
-      const updatedTodos = todos.filter(
-        (todo: any) => !deletedIds.includes(todo.id)
-      );
-      setTodos(updatedTodos);
-
+      setTodos(deletedArray);
       setSelectedTodo([]);
+      setAllTodosSelected(false);
+
       Swal.fire({
         toast: true,
         icon: "success",
@@ -137,28 +174,40 @@ function TodoApp() {
       }
     } catch (error) {
       console.error("Todo güncellenirken bir hata oluştu:", error);
-      return null; 
+      return null;
     }
   };
 
   const handleCompleted = async () => {
     try {
       const updatePromises = selectedTodo?.map(async (todo: any) => {
-        const updated = await updateTodo(todo);
-        return updated;
+        if (todo?.id === 151) {
+          Swal.fire({
+            toast: true,
+            icon: "error",
+            title: "İşlem Başarısız",
+            text: "Bu id'e ait görevler üzerinde değişiklik yapılamaz.",
+            timerProgressBar: true,
+            timer: 3000,
+            showConfirmButton: false,
+            position: "top-end",
+          })
+          setSelectedTodo([]);
+        } else {
+          const updated = await updateTodo(todo);
+          return updated;
+        }
       });
 
       const results = await Promise.all(updatePromises);
 
-      const updatedArray = todos.map((todo: any) => {
-        const updatedItem = results?.find((res) => res.id === todo.id);
-        return updatedItem ? updatedItem : todo;
-      });
+      const updatedArray = todosWithReults('update', todos, results);
 
       setTodos(updatedArray);
 
 
       setSelectedTodo([]);
+      setAllTodosSelected(false)
 
       Swal.fire({
         toast: true,
@@ -190,9 +239,16 @@ function TodoApp() {
       });
     }
   };
-  
 
-  useEffect(() => {}, [updateTodo]);
+  const handleAllTodoSelect = () => {
+    setAllTodosSelected((prev) => !prev)
+    if (!allTodosSelected) {
+      setSelectedTodo(todos)
+    } else {
+      setSelectedTodo([])
+    }
+  }
+
   function filterTodosByUserIdAndTodo() {
     let filteredTodos = todos;
 
@@ -210,7 +266,7 @@ function TodoApp() {
 
     return filteredTodos;
   }
-  
+
   return (
     <>
       <CustomNavbar />
@@ -257,6 +313,7 @@ function TodoApp() {
                 onCompletedClick={handleCompleted}
               />
             </div>
+
           </div>
         </div>
         <ScrollContainer>
@@ -267,6 +324,20 @@ function TodoApp() {
                   ref={animationParent}
                   className="p-0 d-flex flex-column gap-2"
                 >
+                  <li onClick={handleAllTodoSelect} className="w-100 bg-white d-flex align-items-center justify-content-start flex-row gap-2 px-2 my-2">
+                    <input
+                      className="form-check-input m-0 p-0"
+                      type="checkbox"
+                      style={{ borderColor: '#ced4da' }}
+                      value=""
+                      checked={allTodosSelected}
+                      id="todo-all-select"
+                    />
+                    <label
+                      className="form-check-label m-0 p-0 text-secondary fw-500"
+                      htmlFor="flexCheckDefault"
+                    >Select All</label>
+                  </li>
                   {filterTodosByUserIdAndTodo().map((todo: any) => (
                     <div key={todo.id}>
                       <div className="form-check d-flex align-items-center gap-2 px-2">
@@ -274,8 +345,9 @@ function TodoApp() {
                           onChange={(e) => {
                             handleSelected(todo, e);
                           }}
-                          className="form-check-input m-0 p-0 border-black"
+                          className="form-check-input m-0 p-0"
                           type="checkbox"
+                          style={{ borderColor: '#ced4da' }}
                           value=""
                           checked={selectedTodo.includes(todo)}
                           id={`todo-${todo?.id}`}
