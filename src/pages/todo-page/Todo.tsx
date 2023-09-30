@@ -297,7 +297,7 @@ function TodoApp() {
                     );
                   }
                 }}
-                className="form-control w-50"
+                className="form-control w-25"
               />
 
               <input
@@ -305,7 +305,7 @@ function TodoApp() {
                 placeholder="Todo'ya göre filtrele"
                 value={filteredTodo}
                 onChange={(e) => setFilteredTodo(e.target.value)}
-                className="form-control w-50"
+                className="form-control w-25  "
               />
               <ButtonGroup
                 onAddClick={addTodo}
