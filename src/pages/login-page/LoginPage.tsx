@@ -53,16 +53,18 @@ const handleLogin = async () => {
             }, 2000);
           },
         });
-      } else {
-        Swal.fire({
-          title: 'Hata',
-          text: 'Giriş işlemi başarısız oldu. Lütfen tekrar deneyin.',
-          icon: 'error',
-          confirmButtonText: 'Tamam',
-        });
-      }
-    } catch (error) {
-      console.error('Hata oluştu:', error);
+      } 
+    } catch {
+      Swal.fire({
+        toast: true,
+        icon: "error",
+        title: "İşlem Başarısız",
+        text: 'E-posta veya şifre hatalı. Lütfen tekrar deneyin.',
+        timerProgressBar: true,
+        timer: 3000,
+        showConfirmButton: false,
+        position: "top-end",
+      })
     }
   };
 

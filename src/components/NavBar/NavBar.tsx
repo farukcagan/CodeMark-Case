@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-
+import "./Nav.css"
 
 function CustomNavbar() {
 
@@ -26,7 +26,7 @@ function CustomNavbar() {
                 </div>
                 <div>
                     <ul className="navbar-nav">
-                        <li className="nav-item">
+                        <li className="nav-item closer">
                             <li className="nav-link fw-bolder" onClick={handleLogOut}>Çıkış Yap</li>
                         </li>
                     </ul>

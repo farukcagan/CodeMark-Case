@@ -8,10 +8,10 @@ interface TableProps {
 const Table: React.FC<TableProps> = ({ headers, data }) => {
   return (
     <table className="table table-striped">
-      <thead>
+      <thead className="sticky-header-table">
         <tr>
           {headers.map((header, index) => (
-            <th key={index} className="sticky-header bg-light">
+            <th key={index} className="bg-light">
               {header}
             </th>
           ))}

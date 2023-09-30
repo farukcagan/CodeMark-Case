@@ -8,9 +8,16 @@ import ButtonGroup from "../../components/Button/Buttons";
 import { ScrollContainer } from "react-nice-scroll";
 import "react-nice-scroll/dist/styles.css";
 
+type TodoModel = {
+  id: number;
+  todo: string;
+  userId: number;
+  completed: boolean;
+};
+
 function TodoApp() {
-  const [todos, setTodos] = useState<any>([]);
-  const [selectedTodo, setSelectedTodo] = useState<any>([]);
+  const [todos, setTodos] = useState<TodoModel[]>([]);
+  const [selectedTodo, setSelectedTodo] = useState<TodoModel[]>([]);
   const [newTodo, setNewTodo] = useState("");
   const [filteredUserId, setFilteredUserId] = useState<number | null>(null);
   const [filteredTodo, setFilteredTodo] = useState<string>("");
@@ -21,56 +28,57 @@ function TodoApp() {
 
   const API_URL = "https://dummyjson.com/todos";
   const ADD_TODO_URL = "https://dummyjson.com/todos/add";
+  console.log(todos)
+
+  async function fetchTodos() {
+    try {
+      Swal.fire({
+        title: "Veriler Yükleniyor",
+        html: "Lütfen Bekleyiniz...",
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
+      const response = await fetch(API_URL);
+      const data = await response.json();
+      setTodos(data.todos);
+      Swal.close();
+    } catch (error) {
+      console.error("Veriler yüklenirken bir hata oluştu:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Hata",
+        text: "Veriler yüklenirken bir hata oluştu.",
+      });
+    }
+  }
+
+
 
   useEffect(() => {
-    async function fetchTodos() {
-      try {
-        Swal.fire({
-          title: "Veriler Yükleniyor",
-          html: "Lütfen Bekleyiniz...",
-          didOpen: () => {
-            Swal.showLoading();
-          },
-        });
-
-        const response = await fetch(API_URL);
-        const data = await response.json();
-        setTodos(data.todos);
-        Swal.close();
-      } catch (error) {
-        console.error("Veriler yüklenirken bir hata oluştu:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Hata",
-          text: "Veriler yüklenirken bir hata oluştu.",
-        });
-      }
-    }
-
     fetchTodos();
   }, []);
 
-  function todosWithReults(type: string, todos: [], results: any) {
+  function todosWithReults(type: string, todos: TodoModel[], results: TodoModel[] | undefined) {
     switch (type) {
       case 'update':
-        return todos.map((todo: any) => {
-          const updatedItem = results?.find((res: any) => res.id === todo.id);
+        return todos.map((todo) => {
+          const updatedItem = results?.find((res) => res.id === todo.id);
           return updatedItem ? updatedItem : todo;
         });
       case 'delete':
         const deletedIds = results
-          .filter((result: any) => result.isDeleted)
-          .map((result: any) => result.id);
+          ? results.filter((result: any) => result.isDeleted).map((result) => result.id)
+          : [];
 
-        return todos.filter(
-          (todo: any) => !deletedIds.includes(todo.id)
-        );
+        return todos.filter((todo) => !deletedIds.includes(todo.id));
       default:
         console.log('error!');
+        return todos;
     }
-
-
   }
+
 
   const addTodo = async () => {
     setShowModal(true);
@@ -96,7 +104,7 @@ function TodoApp() {
     }
   };
 
-  const deleteTodo = async (todo: any) => {
+  const deleteTodo = async (todo: TodoModel) => {
     try {
       const response = await fetch(`${API_URL}/${todo?.id}`, {
         method: "DELETE",
@@ -112,13 +120,13 @@ function TodoApp() {
 
   const handleDelete = async () => {
     try {
-      const deletePromises = selectedTodo.map(async (todo: any) => {
+      const deletePromises = selectedTodo.map(async (todo: TodoModel) => {
         if (todo?.id === 151) {
           Swal.fire({
             toast: true,
             icon: "error",
             title: "İşlem Başarısız",
-            text: "Bu id'e ait görevleri silemezsiniz.",
+            text: "Sonradan eklediğiniz görevleri silemezsiniz.",
             timerProgressBar: true,
             timer: 3000,
             showConfirmButton: false,
@@ -130,9 +138,6 @@ function TodoApp() {
           return { ...deleted };
         }
       });
-
-
-      // const results = await Promise.all(deletePromises);
 
       const results = await Promise.all(deletePromises);
       const deletedArray = todosWithReults('delete', todos, results);
@@ -155,7 +160,7 @@ function TodoApp() {
     }
   };
 
-  const updateTodo = async (todo: any) => {
+  const updateTodo = async (todo: TodoModel) => {
     try {
       const response = await fetch(`${API_URL}/${todo.id}`, {
         method: "PUT",
@@ -180,7 +185,7 @@ function TodoApp() {
 
   const handleCompleted = async () => {
     try {
-      const updatePromises = selectedTodo?.map(async (todo: any) => {
+      const updatePromises = selectedTodo?.map(async (todo: TodoModel) => {
         if (todo?.id === 151) {
           Swal.fire({
             toast: true,
@@ -259,12 +264,23 @@ function TodoApp() {
     }
 
     if (filteredTodo.trim() !== "") {
-      filteredTodos = filteredTodos.filter((todo: any) =>
+      filteredTodos = filteredTodos.filter((todo: TodoModel) =>
         todo.todo.toLowerCase().includes(filteredTodo.toLowerCase())
       );
     }
 
     return filteredTodos;
+  }
+
+  const handleFilteredUserIdChange = (e:any) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      setFilteredUserId(value === '' ? null : parseInt(value, 10));
+    }
+  };
+
+  const onClearClick = () => {
+    fetchTodos()
   }
 
   return (
@@ -289,14 +305,7 @@ function TodoApp() {
                 type="text"
                 placeholder="User ID'ye göre filtrele"
                 value={filteredUserId === null ? "" : filteredUserId.toString()}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (/^\d*$/.test(value)) {
-                    setFilteredUserId(
-                      value === "" ? null : parseInt(value, 10)
-                    );
-                  }
-                }}
+                onChange={handleFilteredUserIdChange}
                 className="form-control w-25"
               />
 
@@ -311,6 +320,7 @@ function TodoApp() {
                 onAddClick={addTodo}
                 onDeleteClick={handleDelete}
                 onCompletedClick={handleCompleted}
+                onClearClick={onClearClick}
               />
             </div>
 
@@ -369,7 +379,11 @@ function TodoApp() {
                                     : "#DC3545",
                                 }}
                               >
-                                {todo.id} - {todo.todo} - {todo.userId}
+                                <li style={{ listStyle: "none" }}>
+                                  <span className="me-3">{`id: ${todo.id}`}</span>
+                                  <span className="me-3">{`todo: ${todo.todo}`}</span>
+                                  <span>{`userId: ${todo.userId}`}</span>
+                                </li>
                               </div>
                             </div>
                           </li>
