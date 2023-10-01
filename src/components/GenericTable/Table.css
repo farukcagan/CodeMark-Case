@@ -3,4 +3,5 @@
   top: 0;
   background-color: rgb(255, 255, 255);
   z-index: 5;
+  vertical-align: middle;
 }

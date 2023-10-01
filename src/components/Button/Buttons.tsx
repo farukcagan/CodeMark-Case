@@ -1,4 +1,3 @@
-
 interface ButtonGroupProps {
   onAddClick: () => void;
   onDeleteClick: () => void;
@@ -6,20 +5,25 @@ interface ButtonGroupProps {
   onClearClick: () => void;
 }
 
-function ButtonGroup({ onAddClick, onDeleteClick, onCompletedClick,onClearClick }: ButtonGroupProps) {
+// onAddClick: Yeni bir görev eklemek için kullanılacak işlevi temsil eder.
+// onDeleteClick: Seçilen görevleri silmek için kullanılacak işlevi temsil eder.
+// onCompletedClick: görevlerin tamamlanma durumunu değiştirir ture ise false, false ise true yapar.
+// onClearClick: Tüm görevleri tekarar il haline getirecek işlevi temsil eder.
+
+function ButtonGroup({ onAddClick, onDeleteClick, onCompletedClick, onClearClick }: ButtonGroupProps) {
   return (
     <div className="d-flex flex-row align-items-center gap-2">
       <button className="btn btn-sm btn-primary" onClick={onAddClick}>
-       Todo Ekle
+        Todo Ekle
       </button>
       <button className="btn btn-sm bg-danger text-white" onClick={onDeleteClick}>
-        Delete
+        Sil
       </button>
       <button className="btn btn-sm bg-success text-white" onClick={onCompletedClick}>
-        Completed
+        Tamamlandı
       </button>
       <button className="btn btn-sm bg-warning text-white" onClick={onClearClick}>
-        Clear
+        Temizle
       </button>
     </div>
   );

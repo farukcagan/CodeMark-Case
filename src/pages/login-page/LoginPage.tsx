@@ -9,64 +9,64 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 function LoginPage() {
+    // Kullanıcı adı ve şifre durumlarını yerel state olarak saklar.
     const [username, setUsername] = useState<string>('kminchelle');
     const [password, setPassword] = useState<string>('0lelplR');
-
-
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    // Kullanıcı adı değişikliklerini takip eden işlev.
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value);
     };
 
+    // Şifre değişikliklerini takip eden işlev.
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
     };
 
+    // Giriş işlemini gerçekleştiren işlev.
+    const handleLogin = async () => {
+        try {
+            const response = await axios.post('https://dummyjson.com/auth/login', {
+                username: username,
+                password: password,
+            });
 
+            if (response.status === 200) {
+                const data = response.data;
+                console.log(data);
 
-  
-  
-const handleLogin = async () => {
-    try {
-      const response = await axios.post('https://dummyjson.com/auth/login', {
-        username: username,
-        password: password,
-      });
-  
-      if (response.status === 200) {
-        const data = response.data;
-        console.log(data);
-  
-        Swal.fire({
-          title: 'Sayfaya Yönlendiriliyorsunuz',
-          html: 'Lütfen Bekleyiniz...',
-          didOpen: () => {
-            Swal.showLoading();
-            setTimeout(() => {
-              navigate('/users');
-              dispatch(setToken(data.token));
-              dispatch(setUserData(data));
-              localStorage.setItem('token', data.token);
-            }, 2000);
-          },
-        });
-      } 
-    } catch {
-      Swal.fire({
-        toast: true,
-        icon: "error",
-        title: "İşlem Başarısız",
-        text: 'E-posta veya şifre hatalı. Lütfen tekrar deneyin.',
-        timerProgressBar: true,
-        timer: 3000,
-        showConfirmButton: false,
-        position: "top-end",
-      })
-    }
-  };
+                // Başarılı giriş durumunda kullanıcıyı yönlendirir, token ve giren kullanıcı verilerini redux ve localstorage içinde saklar.
+                Swal.fire({
+                    title: 'Sayfaya Yönlendiriliyorsunuz',
+                    html: 'Lütfen Bekleyiniz...',
+                    didOpen: () => {
+                        Swal.showLoading();
+                        setTimeout(() => {
+                            navigate('/users');
+                            dispatch(setToken(data.token));
+                            dispatch(setUserData(data));
+                            localStorage.setItem('token', data.token);
+                        }, 2000);
+                    },
+                });
+            } 
+        } catch {
+            // Hatalı giriş durumunda hata mesajını gösterir.
+            Swal.fire({
+                toast: true,
+                icon: "error",
+                title: "İşlem Başarısız",
+                text: 'E-posta veya şifre hatalı. Lütfen tekrar deneyin.',
+                timerProgressBar: true,
+                timer: 3000,
+                showConfirmButton: false,
+                position: "top-end",
+            })
+        }
+    };
 
     return (
         <>
@@ -113,7 +113,6 @@ const handleLogin = async () => {
                     </div>
                 </div>
             </div>
-
         </>
     );
 }

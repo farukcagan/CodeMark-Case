@@ -8,6 +8,13 @@ interface ModalProps {
     handleAdd: () => Promise<void>;
 }
 
+// Modal bileşeni, bir modal penceresini oluşturur.
+// show: Modal'ın görünürlüğünü kontrol eden bir değerdir.
+// handleClose: Modal'ı kapatmak için kullanılacak işlev içerir.
+// value: Input alanının değerini temsil eder.
+// setValue: Input alanının değerini güncellemek için kullanılacak işlevdir.
+// handleAdd: Ekleme işlemini gerçekleştirmek için kullanılacak işlevdir.
+
 function Modal({ show, handleClose, value, setValue, handleAdd }: ModalProps) {
     return (
         <div className='custom-modal-container'>

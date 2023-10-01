@@ -9,6 +9,9 @@ function CustomNavbar() {
         navigate('/login');
     }
 
+    // CustomNavbar bileşeni, generic bir gezinme çubuğu oluşturur tüm sayfalarda kullanılabilir.
+
+
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container">

@@ -20,12 +20,16 @@ function TodoApp() {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [allTodosSelected, setAllTodosSelected] = useState<boolean>(false);
 
+  // Otomatik animasyonu etkinleştirmek için bir referans tanımlanıyor,todoları siler ve eklerken bir smooth görüntü sunuyor.
   const [animationParent] = useAutoAnimate();
 
+  // API URL'leri tanımlanıyor.
   const API_URL = "https://dummyjson.com/todos";
   const ADD_TODO_URL = "https://dummyjson.com/todos/add";
-
   console.log(todos)
+
+
+  // Todo verilerini getiren işlev.
 
   async function fetchTodos() {
     try {
@@ -52,10 +56,13 @@ function TodoApp() {
   }
 
 
+  // Sayfa yüklendiğinde todo verilerini çeken işlev.
 
   useEffect(() => {
     fetchTodos();
   }, []);
+
+  // Todo güncelleme veya silme sonuçlarını işleyen işlev.
 
   function todosWithReults(type: string, todos: TodoModel[], results: TodoModel[] | undefined) {
     switch (type) {
@@ -76,6 +83,7 @@ function TodoApp() {
     }
   }
 
+  // Yeni bir todo eklemeyi başlatan işlev.
 
   const addTodo = async () => {
     setShowModal(true);
@@ -101,6 +109,8 @@ function TodoApp() {
     }
   };
 
+  // Todo silmeyi başlatan işlev.
+
   const deleteTodo = async (todo: TodoModel) => {
     try {
       const response = await fetch(`${API_URL}/${todo?.id}`, {
@@ -114,6 +124,8 @@ function TodoApp() {
       throw error;
     }
   };
+
+  // Seçilen todo'ları silen işlev.
 
   const handleDelete = async () => {
     try {
@@ -157,6 +169,8 @@ function TodoApp() {
     }
   };
 
+  // Seçilen todo'ların complated durumunu değişir. true ise false, false ise true yapar.
+
   const updateTodo = async (todo: TodoModel) => {
     try {
       const response = await fetch(`${API_URL}/${todo.id}`, {
@@ -180,9 +194,11 @@ function TodoApp() {
     }
   };
 
+  // Seçilen todoların tamamlanma durumunu güncelleyen işlev.
   const handleCompleted = async () => {
     try {
       const updatePromises = selectedTodo?.map(async (todo: TodoModel) => {
+        // Eğer seçilen todo'nun id'si 151 ise özel bir uyarı gösterilir ve işlem iptal edilir.
         if (todo?.id === 151) {
           Swal.fire({
             toast: true,
@@ -207,10 +223,11 @@ function TodoApp() {
 
       setTodos(updatedArray);
 
-
+      // Seçili todo listesi ve "Tümünü Seç" durumu sıfırlanır.
       setSelectedTodo([]);
       setAllTodosSelected(false)
 
+      // Başarılı güncelleme bildirimi gösterilir.
       Swal.fire({
         toast: true,
         icon: "success",
@@ -225,6 +242,7 @@ function TodoApp() {
     }
   };
 
+  // Bir todo'nun seçilip seçilmediğini kontrol eden işlev.
   const handleSelected = (item: any, event: any) => {
     if (event?.target?.checked) {
       setSelectedTodo((prevSelectedTodo: any) => {
@@ -242,6 +260,7 @@ function TodoApp() {
     }
   };
 
+  // Tüm todoları seçip seçmemeyi yöneten işlev.
   const handleAllTodoSelect = () => {
     setAllTodosSelected((prev) => !prev)
     if (!allTodosSelected) {
@@ -251,6 +270,7 @@ function TodoApp() {
     }
   }
 
+  // User ID ve todo ismine göre filtreleme işlemini gerçekleştiren işlev.
   function filterTodosByUserIdAndTodo() {
     let filteredTodos = todos;
 
@@ -269,6 +289,7 @@ function TodoApp() {
     return filteredTodos;
   }
 
+  // User ID filtresini değiştiren işlev.
   const handleFilteredUserIdChange = (e: any) => {
     const value = e.target.value;
     if (/^\d*$/.test(value)) {
@@ -276,9 +297,11 @@ function TodoApp() {
     }
   };
 
+  // Verileri yeniden yükleme işlemini başlatan işlev.
   const onClearClick = () => {
     fetchTodos()
   }
+
 
   return (
     <>

@@ -1,3 +1,5 @@
+// Genel olarak Kullanılan modelleri içerir
+
 export interface User {
   id: number;
   firstName: string;

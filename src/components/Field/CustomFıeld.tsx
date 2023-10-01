@@ -5,6 +5,8 @@ type CustomFieldProps = {
     label: string
 }
 
+// CustomField bileşeni, generic bir giriş alanı oluşturur.
+
 function CustomField({ label, props }: CustomFieldProps) {
     return (
         <div className="form-group">
