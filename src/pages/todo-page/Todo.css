@@ -14,5 +14,9 @@
   }
   
   .ns-container{
-    height: 500px !important;
+    height: 400px !important;
+  }
+
+  .todo-page{
+    margin: auto;
   }

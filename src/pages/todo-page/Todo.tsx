@@ -316,17 +316,17 @@ function TodoApp() {
         />
       )}
 
-      <div>
-        <div className="p-5 sticky-header py-2">
+      <div className="w-50 todo-page" >
+        <div className="p-2 sticky-header py-2">
           <div>
-            <h1>Todo List</h1>
+            <h1>Todos</h1>
             <div className="d-flex flex-row align-items-center gap-2">
               <input
                 type="text"
                 placeholder="User ID'ye göre filtrele"
                 value={filteredUserId === null ? "" : filteredUserId.toString()}
                 onChange={handleFilteredUserIdChange}
-                className="form-control w-25"
+                className="form-control w-50"
               />
 
               <input
@@ -334,7 +334,7 @@ function TodoApp() {
                 placeholder="Todo'ya göre filtrele"
                 value={filteredTodo}
                 onChange={(e) => setFilteredTodo(e.target.value)}
-                className="form-control w-25  "
+                className="form-control w-50"
               />
               <ButtonGroup
                 onAddClick={addTodo}
@@ -354,7 +354,7 @@ function TodoApp() {
                   ref={animationParent}
                   className="p-0 d-flex flex-column gap-2"
                 >
-                  <li onClick={handleAllTodoSelect} className="w-100 bg-white d-flex align-items-center justify-content-start flex-row gap-2 px-2 my-2">
+                  <li onClick={handleAllTodoSelect} className="w-25 bg-white d-flex align-items-center justify-content-start flex-row gap-2 px-2 my-2">
                     <input
                       className="form-check-input m-0 p-0"
                       type="checkbox"

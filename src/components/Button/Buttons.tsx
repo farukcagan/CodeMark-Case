@@ -14,13 +14,13 @@ function ButtonGroup({ onAddClick, onDeleteClick, onCompletedClick, onClearClick
   return (
     <div className="d-flex flex-row align-items-center gap-2">
       <button className="btn btn-sm btn-primary" onClick={onAddClick}>
-        Todo Ekle
+        Ekle
       </button>
       <button className="btn btn-sm bg-danger text-white" onClick={onDeleteClick}>
         Sil
       </button>
       <button className="btn btn-sm bg-success text-white" onClick={onCompletedClick}>
-        Tamamlandı
+        Güncelle
       </button>
       <button className="btn btn-sm bg-warning text-white" onClick={onClearClick}>
         Temizle
