@@ -86,7 +86,6 @@ function TodoApp() {
   // Yeni bir todo eklemeyi başlatan işlev.
 
   const addTodo = async () => {
-    setShowModal(true);
     if (newTodo.trim() !== "") {
       try {
         const response = await fetch(ADD_TODO_URL, {
@@ -108,6 +107,10 @@ function TodoApp() {
       }
     }
   };
+
+  const showModalClick = () => {
+    setShowModal(true)
+  }
 
   // Todo silmeyi başlatan işlev.
 
@@ -337,7 +340,7 @@ function TodoApp() {
                 className="form-control w-50"
               />
               <ButtonGroup
-                onAddClick={addTodo}
+                onAddClick={showModalClick}
                 onDeleteClick={handleDelete}
                 onCompletedClick={handleCompleted}
                 onClearClick={onClearClick}
@@ -400,8 +403,7 @@ function TodoApp() {
                                 }}
                               >
                                 <li style={{ listStyle: "none" }}>
-                                  <span className="me-3">{`id: ${todo.id}`}</span>
-                                  <span className="me-3">{`todo: ${todo.todo}`}</span>
+                                  <span className="me-3">{`${todo.todo}`}</span>
                                   <span>{`userId: ${todo.userId}`}</span>
                                 </li>
                               </div>
