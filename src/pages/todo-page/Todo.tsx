@@ -138,7 +138,7 @@ function TodoApp() {
             toast: true,
             icon: "error",
             title: "İşlem Başarısız",
-            text: "Sonradan eklediğiniz görevleri silemezsiniz.",
+            text: "Görevleri silme sırasında bir hata oluştu.",
             timerProgressBar: true,
             timer: 3000,
             showConfirmButton: false,
@@ -158,15 +158,18 @@ function TodoApp() {
       setSelectedTodo([]);
       setAllTodosSelected(false);
 
-      Swal.fire({
-        toast: true,
-        icon: "success",
-        title: "İşlem Başarılı",
-        text: "Seçtiğiniz görev başarı ile silinmiştir.",
-        timer: 3000,
-        showConfirmButton: false,
-        position: "top-end",
-      });
+      if (selectedTodo.length > 0) {
+        Swal.fire({
+          toast: true,
+          icon: "success",
+          title: "İşlem Başarılı",
+          text: "Seçtiğiniz görev başarı ile silinmiştir.",
+          timer: 3000,
+          showConfirmButton: false,
+          position: "top-end",
+        });
+      }
+
     } catch (error) {
       console.error("Görevleri silme sırasında bir hata oluştu:", error);
     }
@@ -207,7 +210,7 @@ function TodoApp() {
             toast: true,
             icon: "error",
             title: "İşlem Başarısız",
-            text: "Sonradan eklenen görevler üzerinde değişiklik yapılamaz.",
+            text: "Görevleri güncelleme sırasında bir hata oluştu.",
             timerProgressBar: true,
             timer: 3000,
             showConfirmButton: false,
@@ -231,15 +234,17 @@ function TodoApp() {
       setAllTodosSelected(false)
 
       // Başarılı güncelleme bildirimi gösterilir.
-      Swal.fire({
-        toast: true,
-        icon: "success",
-        title: "İşlem Başarılı",
-        text: "Seçilen Todolar başarıyla güncellendi.",
-        timer: 3000,
-        showConfirmButton: false,
-        position: "top-end",
-      });
+      if (selectedTodo.length > 0) {
+        Swal.fire({
+          toast: true,
+          icon: "success",
+          title: "İşlem Başarılı",
+          text: "Seçilen Todolar başarıyla güncellendi.",
+          timer: 3000,
+          showConfirmButton: false,
+          position: "top-end",
+        });
+      }
     } catch (error) {
       console.error("Görevleri güncelleme sırasında bir hata oluştu:", error);
     }
