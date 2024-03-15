@@ -18,5 +18,3 @@ kullanıcı verilerinin localstorage de tutulması
 CRUD İşlemleri:
 Uygulama içinde veri yönetimi için Oluştur, Oku, Güncelle ve Sil işlemleri.
 
-Durum Yönetimi:
-Uygulamanın durumu, Redux kullanılarak yönetilmekte olup, bileşenler arasında etkili durum yönetimi için merkezi bir depo sağlar.
